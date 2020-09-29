@@ -10,10 +10,62 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 ​
 const render = require("./lib/htmlRenderer");
 ​
-​
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
-​
+​const employeeArray = [];
+let id = 0;
+const createEmployee=()=>{
+  inquirer.prompt([
+  {
+    name: "role",
+    type: "list",
+    message: "Select the role of your employee",
+    choices: ["Manager","Developer","Intern"],
+  },
+  {
+    name: "name", 
+    type: "input",
+    message: "Enter first and last name of the employee"
+  },
+  {
+    name: "email", 
+    type: "input",
+    message: "Enter email address of the employee"
+  },
+  {
+    name: "department", 
+    type: "input",
+    message: "Enter the department ID for new manager",
+    when: (answers)=>answers.type === "Manager",
+  },
+  {
+    name: "github", 
+    type: "input",
+    message: "Enter the github username for new developer",
+    when: (answers)=>answers.type === "Developer",
+  },
+  {
+    name: "institution", 
+    type: "input",
+    message: "Enter the academic institution of new intern",
+    when: (answers)=>answers.type==="Intern",
+  },
+])
+.then((res) => {
+  if (res.role==="Manager") {
+    employeeArray.push(new Manager(res.name, res.email, res.department, id))
+    id++
+  }
+  if (res.role==="Developer") {
+    employeeArray.push(new Developer(res.name, res.email, res.github, id))
+    id++
+  }
+  if (res.role==="Intern") {
+    employeeArray.push(new Intern(res.name, res.email, res.institution, id))
+  }
+})
+}
+
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
 // generate and return a block of HTML including templated divs for each employee!
