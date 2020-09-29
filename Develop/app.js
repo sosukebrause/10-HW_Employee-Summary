@@ -20,7 +20,7 @@ const createEmployee=()=>{
     name: "role",
     type: "list",
     message: "Select the role of your employee",
-    choices: ["Manager","Developer","Intern"],
+    choices: ["Manager","Engineer","Intern"],
   },
   {
     name: "name", 
@@ -41,8 +41,8 @@ const createEmployee=()=>{
   {
     name: "github", 
     type: "input",
-    message: "Enter the github username for new developer",
-    when: (answers)=>answers.type === "Developer",
+    message: "Enter the github username for new Engineer",
+    when: (answers)=>answers.type === "Engineer",
   },
   {
     name: "institution", 
@@ -56,13 +56,33 @@ const createEmployee=()=>{
     employeeArray.push(new Manager(res.name, res.email, res.department, id))
     id++
   }
-  if (res.role==="Developer") {
-    employeeArray.push(new Developer(res.name, res.email, res.github, id))
+  if (res.role==="Engineer") {
+    employeeArray.push(new Engineer(res.name, res.email, res.github, id))
     id++
   }
   if (res.role==="Intern") {
     employeeArray.push(new Intern(res.name, res.email, res.institution, id))
+    id++
   }
+
+  inquirer.prompt({
+    name:"again",
+    message:"Employee has been created\nWould you like add another?",
+    type: "confirm",
+  }).then((res)=>{
+    if(res.again) {
+      createEmployee()
+    }else {
+      const data = render(employeeArray)
+      fs.writeFile(outputPath, data, (err)=>{
+        if (err){
+          throw err
+        }else{
+          console.log("Saved");
+        }
+      })
+    }
+  })
 })
 }
 
