@@ -45,9 +45,9 @@ const createEmployee=()=>{
     when: (answers)=>answers.type === "Engineer",
   },
   {
-    name: "institution", 
+    name: "school", 
     type: "input",
-    message: "Enter the academic institution of new intern",
+    message: "Enter the school of new intern",
     when: (answers)=>answers.type==="Intern",
   },
 ])
@@ -61,7 +61,7 @@ const createEmployee=()=>{
     id++
   }
   if (res.role==="Intern") {
-    employeeArray.push(new Intern(res.name, res.email, res.institution, id))
+    employeeArray.push(new Intern(res.name, res.email, res.school, id))
     id++
   }
 
