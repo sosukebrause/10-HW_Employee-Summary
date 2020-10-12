@@ -5,7 +5,7 @@ const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
 ​
-const OUTPUT_DIR = path.resolve(__dirname, "output")
+const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 ​
 const render = require("./lib/htmlRenderer");
@@ -14,7 +14,7 @@ const render = require("./lib/htmlRenderer");
 // and to create objects for each team member (using the correct classes as blueprints!)
 ​const employeeArray = [];
 let id = 0;
-const createEmployee=()=>{
+const createEmployee= () => {
   inquirer.prompt([
   {
     name: "role",
@@ -25,65 +25,65 @@ const createEmployee=()=>{
   {
     name: "name", 
     type: "input",
-    message: "Enter first and last name of the employee"
+    message: "Enter first and last name of the employee",
   },
   {
     name: "email", 
     type: "input",
-    message: "Enter email address of the employee"
+    message: "Enter email address of the employee",
   },
   {
-    name: "department", 
+    name: "office", 
     type: "input",
-    message: "Enter the department ID for new manager",
-    when: (answers)=>answers.type === "Manager",
+    message: "Enter the office ID for new manager",
+    when: (answers)=>answers.role === "Manager",
   },
   {
     name: "github", 
     type: "input",
     message: "Enter the github username for new Engineer",
-    when: (answers)=>answers.type === "Engineer",
+    when: (answers) => answers.role === "Engineer",
   },
   {
     name: "school", 
     type: "input",
     message: "Enter the school of new intern",
-    when: (answers)=>answers.type==="Intern",
+    when: (answers) => answers.role === "Intern",
   },
 ])
 .then((res) => {
-  if (res.role==="Manager") {
-    employeeArray.push(new Manager(res.name, res.email, res.department, id))
-    id++
+  if (res.role === "Manager") {
+    employeeArray.push(new Manager(res.name, res.email, res.office, id));
+    id++;
   }
-  if (res.role==="Engineer") {
-    employeeArray.push(new Engineer(res.name, res.email, res.github, id))
-    id++
+  else if (res.role === "Engineer") {
+    employeeArray.push(new Engineer(res.name, res.email, res.github, id));
+    id++;
   }
-  if (res.role==="Intern") {
-    employeeArray.push(new Intern(res.name, res.email, res.school, id))
-    id++
+  else if (res.role === "Intern") {
+    employeeArray.push(new Intern(res.name, res.email, res.school, id));
+    id++;
   }
 
   inquirer.prompt({
     name:"again",
     message:"Employee has been created\nWould you like add another?",
     type: "confirm",
-  }).then((res)=>{
-    if(res.again) {
-      createEmployee()
-    }else {
-      const data = render(employeeArray)
-      fs.writeFile(outputPath, data, (err)=>{
-        if (err){
-          throw err
-        }else{
+  }).then((res) => {
+    if (res.again) {
+      createEmployee();
+    } else {
+      const data = render(employeeArray);
+      fs.writeFile("./output/team.html", data, (err) => {
+        if (err) {
+          throw err;
+        } else {
           console.log("Saved");
         }
-      })
+      });
     }
-  })
-})
+  });
+});
 }
 createEmployee();
 
